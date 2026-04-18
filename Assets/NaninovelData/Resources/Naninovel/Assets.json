@@ -19,6 +19,12 @@
             "group": "ChoiceHandlers/651e5060-db2d-4391-9a79-bff1793be161"
         },
         {
+            "guid": "f1a2b3c4d5e6478990abcdef01234567",
+            "prefix": "Scripts",
+            "path": "Credits",
+            "group": ""
+        },
+        {
             "guid": "e65a761815b476d44b8c48f7282c1309",
             "prefix": "Scripts",
             "path": "Entry",

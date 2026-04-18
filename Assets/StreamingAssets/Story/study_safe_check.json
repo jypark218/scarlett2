@@ -1,0 +1,27 @@
+{
+  "id": "study_safe_check",
+  "locationId": "library",
+  "speakerId": "holmes",
+  "text": "[홈즈]: 왓슨, 이 금고의 번호는 20년 전의 그 날짜일 걸세.",
+  "choices": [
+    {
+      "text": "1861을 입력한다",
+      "nextNodeId": "safe_open_success",
+      "req": {
+        "items": ["diary_hint"],
+        "nodes": [],
+        "minPlayCount": 0
+      },
+      "effect": {
+        "flags": ["opened_safe"]
+      }
+    },
+    {
+      "text": "조금 더 고민해본다",
+      "nextNodeId": "study_hub"
+    }
+  ],
+  "nextNodeId": "",
+  "archiveId": "",
+  "investigationTier": 2
+}

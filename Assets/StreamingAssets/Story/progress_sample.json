@@ -1,0 +1,19 @@
+{
+  "flags": [
+    { "key": "is_stangerson_betrayed", "isActive": true }
+  ],
+  "characterStates": [
+    { "charId": "hope", "value": 80, "axis": "Trust" },
+    { "charId": "count", "value": 40, "axis": "Pressure" }
+  ],
+  "endings": [
+    { "endingId": "ending_01_true", "isUnlocked": false, "type": "true" },
+    { "endingId": "ending_04_normal", "isUnlocked": true, "type": "normal" }
+  ],
+  "archives": [
+    { "type": "증거", "targetId": "diary_hint" }
+  ],
+  "visitedNodeIds": ["study_hub", "study_safe_check"],
+  "playCount": 3,
+  "inventoryItemIds": ["diary_hint"]
+}

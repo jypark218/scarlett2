@@ -1,0 +1,104 @@
+{
+  "nodes": [
+    {
+      "id": "demo_01",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 1번 — 다음(클릭/스페이스)으로 진행합니다.",
+      "choices": [],
+      "nextNodeId": "demo_02",
+      "archiveId": "",
+      "investigationTier": 0
+    },
+    {
+      "id": "demo_02",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 2번",
+      "choices": [],
+      "nextNodeId": "demo_03",
+      "archiveId": "",
+      "investigationTier": 0
+    },
+    {
+      "id": "demo_03",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 3번",
+      "choices": [],
+      "nextNodeId": "demo_04",
+      "archiveId": "",
+      "investigationTier": 0
+    },
+    {
+      "id": "demo_04",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 4번",
+      "choices": [],
+      "nextNodeId": "demo_05",
+      "archiveId": "",
+      "investigationTier": 0
+    },
+    {
+      "id": "demo_05",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 5번",
+      "choices": [],
+      "nextNodeId": "demo_06",
+      "archiveId": "",
+      "investigationTier": 0
+    },
+    {
+      "id": "demo_06",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 6번",
+      "choices": [],
+      "nextNodeId": "demo_07",
+      "archiveId": "",
+      "investigationTier": 0
+    },
+    {
+      "id": "demo_07",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 7번",
+      "choices": [],
+      "nextNodeId": "demo_08",
+      "archiveId": "",
+      "investigationTier": 0
+    },
+    {
+      "id": "demo_08",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 8번",
+      "choices": [],
+      "nextNodeId": "demo_09",
+      "archiveId": "",
+      "investigationTier": 0
+    },
+    {
+      "id": "demo_09",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 9번",
+      "choices": [],
+      "nextNodeId": "demo_10",
+      "archiveId": "",
+      "investigationTier": 0
+    },
+    {
+      "id": "demo_10",
+      "locationId": "demo_room",
+      "speakerId": "",
+      "text": "샘플 텍스트 10번 — 이제 Naninovel 선택지로 엔딩을 고릅니다.",
+      "choices": [],
+      "nextNodeId": "",
+      "archiveId": "",
+      "investigationTier": 0
+    }
+  ]
+}

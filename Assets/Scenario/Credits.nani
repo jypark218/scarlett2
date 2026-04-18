@@ -1,0 +1,12 @@
+; 엔딩 크레딧 — 끝나면 타이틀로 복귀합니다.
+
+@back Title
+@showPrinter
+
+내레이션: 제작 — Scarlett 데모
+@wait i
+내레이션: 감사합니다.
+@wait i
+
+@hideAll wait!
+@title

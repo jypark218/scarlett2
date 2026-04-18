@@ -1,14 +1,5 @@
-; Played in the title menu.
-; Use to set up the menu's appearance—background, music, FX, etc.
-; Title script path can be changed in the scripts configuration.
+; 타이틀(인트로) — NEW GAME 으로 Entry.nani 가 재생됩니다.
 
-; For example, let's set 'Title' background.
 @back Title
-
-; Note that since we don't have a real background resource yet,
-; Naninovel renders it as a placeholder with abstract visuals.
-
-; Show the title menu.
 @showUI TitleUI
 
-; Click "NEW GAME" to play the entry script.
