@@ -14,9 +14,11 @@ namespace Scarlett.UI
         [SerializeField] DialoguePanel dialoguePanelPrefab;
         [SerializeField] IntroPanel    introPanelPrefab;
         [SerializeField] PopupPanel    popupPanelPrefab;
+        [SerializeField] OpeningPanel  openingPanelPrefab;
 
         DialoguePanel _dialogue;
         IntroPanel    _intro;
+        OpeningPanel  _opening;
 
         readonly Stack<PopupPanel> _popupStack = new Stack<PopupPanel>();
 
@@ -29,6 +31,7 @@ namespace Scarlett.UI
 
         public DialoguePanel Dialogue { get { if (_dialogue == null) _dialogue = Spawn(dialoguePanelPrefab); return _dialogue; } }
         public IntroPanel    Intro    { get { if (_intro    == null) _intro    = Spawn(introPanelPrefab);    return _intro;    } }
+        public OpeningPanel  Opening  { get { if (_opening  == null) _opening  = Spawn(openingPanelPrefab);  return _opening;  } }
 
         public PopupPanel ShowPopup(string message, string confirm = "확인", string cancel = null,
                                     System.Action onConfirm = null, System.Action onCancel = null)

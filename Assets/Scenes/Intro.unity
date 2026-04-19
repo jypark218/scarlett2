@@ -392,7 +392,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 521588468}
+  - component: {fileID: 521588470}
   - component: {fileID: 521588469}
+  - component: {fileID: 521588471}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -424,13 +426,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 521588466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcc10333d1554554db6ca176fab2c817, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f2b6ac5fb9bbb9429886264aa149483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scarlett.UI.GameUI
-  rootUI: {fileID: 0}
-  dialoguePanelPrefab: {fileID: 7415084567512561238, guid: 2487556a4145906488932e55263ede68, type: 3}
-  introPanelPrefab: {fileID: 1932614679751249843, guid: 4b2201d75bf1b0c4e99cfd14f83f415b, type: 3}
+  rootUI: {fileID: 890957055}
+  dialoguePanelPrefab: {fileID: 4249156103368810703, guid: 2487556a4145906488932e55263ede68, type: 3}
+  introPanelPrefab: {fileID: 428094356849364249, guid: 4b2201d75bf1b0c4e99cfd14f83f415b, type: 3}
   popupPanelPrefab: {fileID: 0}
+  openingPanelPrefab: {fileID: 7928433782786350118, guid: 16475fa274d3d3a4483c12880d04c636, type: 3}
+--- !u!114 &521588470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521588466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8a321b845e602d47ac62af3372d76fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scarlett.GameStarter
+  storyRunner: {fileID: 521588471}
+--- !u!114 &521588471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521588466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0197f60ac91e47b43b4147d582cac428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scarlett.Story.StoryRunner
+  storyJsonPath: Story/ScarlettFullGraph
+  startNodeId: start
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,7 +587,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0

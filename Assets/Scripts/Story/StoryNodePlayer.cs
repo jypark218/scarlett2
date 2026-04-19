@@ -32,13 +32,20 @@ namespace Scarlett.Story
         {
             _nodes.Clear();
             CurrentNodeId = null;
-            if (nodes == null)
-                return;
+            if (nodes == null) return;
+
+            int total = 0, skipped = 0;
             foreach (var n in nodes)
             {
-                if (n == null || string.IsNullOrEmpty(n.id))
-                    continue;
+                total++;
+                if (n == null || string.IsNullOrEmpty(n.id)) { skipped++; continue; }
                 _nodes[n.id] = n;
+            }
+            UnityEngine.Debug.Log($"[StoryNodePlayer] SetGraph: 전체 {total}, 등록 {_nodes.Count}, 스킵(id없음) {skipped}");
+            if (_nodes.Count > 0)
+            {
+                var first3 = string.Join(", ", System.Linq.Enumerable.Take(_nodes.Keys, 3));
+                UnityEngine.Debug.Log($"[StoryNodePlayer] 첫 노드 ids: {first3}");
             }
         }
 
@@ -57,6 +64,12 @@ namespace Scarlett.Story
         public StoryNode Current =>
             string.IsNullOrEmpty(CurrentNodeId) || !_nodes.TryGetValue(CurrentNodeId, out var n) ? null : n;
 
+        public string GetFirstNodeId()
+        {
+            foreach (var key in _nodes.Keys) return key;
+            return null;
+        }
+
         public bool TryEnter(string nodeId)
         {
             if (string.IsNullOrEmpty(nodeId) || !_nodes.ContainsKey(nodeId))
@@ -65,6 +78,7 @@ namespace Scarlett.Story
             Progress.playCount++;
             AppendUnique(ref Progress.visitedNodeIds, nodeId);
             ApplyNodeArchive(Current);
+            ApplyNodeInsights(Current);
             NodeEntered?.Invoke(Current);
             return true;
         }
@@ -152,6 +166,20 @@ namespace Scarlett.Story
                     string.Equals(x.targetId, entry.targetId, StringComparison.Ordinal)))
                 list.Add(entry);
             Progress.archives = list.ToArray();
+        }
+
+        void ApplyNodeInsights(StoryNode node)
+        {
+            if (node?.grantInsights == null || node.grantInsights.Length == 0)
+                return;
+            var inv = new List<string>(Progress.inventoryItemIds ?? System.Array.Empty<string>());
+            foreach (var id in node.grantInsights)
+            {
+                if (string.IsNullOrEmpty(id)) continue;
+                if (!inv.Exists(x => string.Equals(x, id, StringComparison.Ordinal)))
+                    inv.Add(id);
+            }
+            Progress.inventoryItemIds = inv.ToArray();
         }
     }
 }

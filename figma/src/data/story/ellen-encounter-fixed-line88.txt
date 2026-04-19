@@ -1,0 +1,1 @@
+      { text: '💬 \"엘렌 양... 당신이 살아계셨군요\"', nextNode: 'ellen_survival_explanation' },

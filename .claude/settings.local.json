@@ -3,7 +3,15 @@
     "allow": [
       "Bash(where code *)",
       "Read(//c/Users/kai21/AppData/Local/Programs/Microsoft VS Code/bin//**)",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(git status *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(npx --version)",
+      "Bash(npx tsx *)",
+      "Bash(node --input-type=module)",
+      "Bash(python3 *)",
+      "Bash(node *)"
     ]
   }
 }

@@ -5,29 +5,68 @@ namespace Scarlett.Story
 {
     public class StoryRunner : MonoBehaviour
     {
-        [SerializeField] string storyJsonPath = "Story/ScarlettDemoGraph";
+        [SerializeField] string storyJsonPath  = "Story/ScarlettFullGraph";
+        [SerializeField] string startNodeId    = "start";
 
         StoryNodePlayer _player;
 
         public void StartNewGame()
         {
-            var ta = Resources.Load<TextAsset>(storyJsonPath);
-            if (ta == null) { Debug.LogError($"[StoryRunner] JSON 없음: {storyJsonPath}"); return; }
+            LoadGraph();
+            if (_player == null) { Debug.LogError("[StoryRunner] LoadGraph 실패 - _player null"); return; }
+            var entered = _player.TryEnter(startNodeId);
+            Debug.Log($"[StoryRunner] TryEnter('{startNodeId}'): {entered}");
+            ShowCurrentNode();
+        }
+
+        public void ContinueGame()
+        {
+            if (!SaveManager.TryLoad(out var path, out var nodeId, out var progress))
+            {
+                Debug.LogWarning("[StoryRunner] 저장 데이터 없음");
+                return;
+            }
+            LoadGraph(path, progress);
+            _player.TryEnter(nodeId);
+            ShowCurrentNode();
+        }
+
+        public void SaveGame()
+        {
+            if (_player == null) return;
+            SaveManager.Save(storyJsonPath, _player);
+        }
+
+        public static bool HasSave => SaveManager.HasSave;
+
+        void LoadGraph(string path = null, StoryProgress existingProgress = null)
+        {
+            var loadPath = path ?? storyJsonPath;
+            Debug.Log($"[StoryRunner] LoadGraph: {loadPath}");
+            var ta = Resources.Load<TextAsset>(loadPath);
+            if (ta == null) { Debug.LogError($"[StoryRunner] JSON 없음: {loadPath}"); return; }
 
             var list = StoryGraphJsonUtility.ListFromJson(ta.text);
             if (list?.nodes == null || list.nodes.Length == 0) { Debug.LogError("[StoryRunner] 노드 없음"); return; }
 
-            _player = new StoryNodePlayer();
+            Debug.Log($"[StoryRunner] 노드 {list.nodes.Length}개 로드됨");
+            _player = new StoryNodePlayer(existingProgress: existingProgress);
             _player.SetGraph(list.nodes);
-            _player.TryEnter(list.nodes[0].id);
-
-            ShowCurrentNode();
         }
 
         void ShowCurrentNode()
         {
             var cur = _player?.Current;
-            if (cur == null) { ShowEnding(); return; }
+            if (cur == null) { ShowEnding(null); return; }
+
+            SaveGame();
+
+            // 엔딩 노드 처리
+            if (cur.isEnding)
+            {
+                ShowNodeText(cur);
+                return;
+            }
 
             var choices = _player.GetAvailableChoices();
             if (choices.Count > 0)
@@ -39,10 +78,15 @@ namespace Scarlett.Story
             }
             else
             {
-                var speaker = string.IsNullOrEmpty(cur.speakerId) ? null : cur.speakerId;
-                var text    = string.IsNullOrEmpty(cur.text)     ? " "  : cur.text;
-                GameUI.Instance.Dialogue.SetDialogue(speaker, text, onNext: OnNextClicked);
+                ShowNodeText(cur, onNext: OnNextClicked);
             }
+        }
+
+        void ShowNodeText(StoryNode node, System.Action onNext = null)
+        {
+            var speaker = string.IsNullOrEmpty(node.speakerId) ? null : node.speakerId;
+            var text    = string.IsNullOrEmpty(node.text)     ? " "  : node.text;
+            GameUI.Instance.Dialogue.SetDialogue(speaker, text, onNext: onNext ?? (() => ShowEnding(node)));
         }
 
         void OnNextClicked()
@@ -55,7 +99,7 @@ namespace Scarlett.Story
             }
             else
             {
-                ShowEnding();
+                ShowEnding(cur);
             }
         }
 
@@ -66,15 +110,33 @@ namespace Scarlett.Story
             var after = _player.Current?.id;
 
             if (after == null || after == before)
-                ShowEnding();
+                ShowEnding(null);
             else
                 ShowCurrentNode();
         }
 
-        void ShowEnding()
+        void ShowEnding(StoryNode endingNode)
         {
+            string endingLabel = null;
+            if (endingNode != null && endingNode.isEnding)
+            {
+                endingLabel = endingNode.endingType switch
+                {
+                    "good"    => "해피 엔딩",
+                    "bad"     => "배드 엔딩",
+                    "neutral" => "일반 엔딩",
+                    "true"    => "진 엔딩",
+                    _         => "엔딩"
+                };
+            }
+
             GameUI.Instance.Dialogue.Hide();
-            GameUI.Instance.Intro.Setup(onStart: StartNewGame);
+
+            var onContinue = HasSave ? (System.Action)null : null;
+            GameUI.Instance.Intro.Setup(
+                onStart:    StartNewGame,
+                onContinue: HasSave ? (System.Action)ContinueGame : null
+            );
         }
     }
 }

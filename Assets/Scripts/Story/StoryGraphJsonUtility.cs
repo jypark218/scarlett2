@@ -1,36 +1,23 @@
 using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Scarlett.Story
 {
-    /// <summary>Unity JsonUtility 기준 직렬화/역직렬화 (외부 JSON 키 이름과 필드명이 일치해야 함).</summary>
     public static class StoryGraphJsonUtility
     {
-        public static string ToJson(StoryNode node) => JsonUtility.ToJson(node, true);
-
-        public static string ToJson(StoryNodeList list) => JsonUtility.ToJson(list, true);
-
-        public static string ToJson(StoryProgress progress) => JsonUtility.ToJson(progress, true);
-
-        public static StoryNode NodeFromJson(string json)
+        static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
-            if (string.IsNullOrWhiteSpace(json))
-                throw new ArgumentException("JSON is empty.", nameof(json));
-            return JsonUtility.FromJson<StoryNode>(json);
-        }
+            NullValueHandling    = NullValueHandling.Ignore,
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+        };
 
-        public static StoryNodeList ListFromJson(string json)
-        {
-            if (string.IsNullOrWhiteSpace(json))
-                throw new ArgumentException("JSON is empty.", nameof(json));
-            return JsonUtility.FromJson<StoryNodeList>(json);
-        }
+        public static string ToJson(StoryNode node)     => JsonConvert.SerializeObject(node,     Formatting.Indented, Settings);
+        public static string ToJson(StoryNodeList list)  => JsonConvert.SerializeObject(list,     Formatting.Indented, Settings);
+        public static string ToJson(StoryProgress prog)  => JsonConvert.SerializeObject(prog,     Formatting.Indented, Settings);
 
-        public static StoryProgress ProgressFromJson(string json)
-        {
-            if (string.IsNullOrWhiteSpace(json))
-                throw new ArgumentException("JSON is empty.", nameof(json));
-            return JsonUtility.FromJson<StoryProgress>(json);
-        }
+        public static StoryNode     NodeFromJson(string json)     => JsonConvert.DeserializeObject<StoryNode>(json);
+        public static StoryNodeList ListFromJson(string json)     => JsonConvert.DeserializeObject<StoryNodeList>(json);
+        public static StoryProgress ProgressFromJson(string json) => JsonConvert.DeserializeObject<StoryProgress>(json);
     }
 }
