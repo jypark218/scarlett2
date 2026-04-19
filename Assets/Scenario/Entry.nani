@@ -1,8 +1,5 @@
 ; 새 게임 — JSON 10노드(@storyStep) 후 선택지, 크레딧으로 이동합니다.
 
-@back Title
-@showPrinter
-
 @storyLoad Story/ScarlettDemoGraph
 @storyStep
 @storyStep
@@ -15,8 +12,4 @@
 @storyStep
 @storyStep
 
-내레이션: 분기를 선택하세요.
-@choice "엔딩으로 (A)"
-    @goto Credits
-@choice "엔딩으로 (B)"
-    @goto Credits
+@storyChoice

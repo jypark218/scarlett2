@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where code *)",
+      "Read(//c/Users/kai21/AppData/Local/Programs/Microsoft VS Code/bin//**)",
+      "Bash(grep -v \"^$\")"
+    ]
+  }
+}

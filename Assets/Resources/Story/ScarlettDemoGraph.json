@@ -94,8 +94,11 @@
       "id": "demo_10",
       "locationId": "demo_room",
       "speakerId": "",
-      "text": "샘플 텍스트 10번 — 이제 Naninovel 선택지로 엔딩을 고릅니다.",
-      "choices": [],
+      "text": "샘플 텍스트 10번 — 분기를 선택하세요.",
+      "choices": [
+        { "text": "엔딩으로 (A)", "nextNodeId": "" },
+        { "text": "엔딩으로 (B)", "nextNodeId": "" }
+      ],
       "nextNodeId": "",
       "archiveId": "",
       "investigationTier": 0

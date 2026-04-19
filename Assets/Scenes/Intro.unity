@@ -429,7 +429,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Scarlett.UI.GameUI
   rootUI: {fileID: 0}
   dialoguePanelPrefab: {fileID: 7415084567512561238, guid: 2487556a4145906488932e55263ede68, type: 3}
-  introPanelPrefab: {fileID: 0}
+  introPanelPrefab: {fileID: 1932614679751249843, guid: 4b2201d75bf1b0c4e99cfd14f83f415b, type: 3}
   popupPanelPrefab: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
