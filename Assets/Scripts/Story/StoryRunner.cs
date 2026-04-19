@@ -73,11 +73,8 @@ namespace Scarlett.Story
 
         void ShowEnding()
         {
-            GameUI.Instance.Dialogue.SetDialogue(null, "끝.", onNext: () =>
-            {
-                GameUI.Instance.Dialogue.Hide();
-                GameUI.Instance.Intro.Setup(onStart: StartNewGame);
-            });
+            GameUI.Instance.Dialogue.Hide();
+            GameUI.Instance.Intro.Setup(onStart: StartNewGame);
         }
     }
 }
