@@ -15,10 +15,18 @@ namespace Scarlett.UI
         [SerializeField] IntroPanel    introPanelPrefab;
         [SerializeField] PopupPanel    popupPanelPrefab;
         [SerializeField] OpeningPanel  openingPanelPrefab;
+        [SerializeField] SettingPanel      settingPopupPrefab;
+        [SerializeField] SaveStoryPanel    saveStoryPanelPrefab;
+        [SerializeField] ToastPanel        toastPanelPrefab;
+        [SerializeField] MessagePopupPanel messagePopupPrefab;
 
-        DialoguePanel _dialogue;
-        IntroPanel    _intro;
-        OpeningPanel  _opening;
+        DialoguePanel      _dialogue;
+        IntroPanel         _intro;
+        OpeningPanel       _opening;
+        SettingPanel       _settingPopup;
+        SaveStoryPanel     _saveStoryPanel;
+        ToastPanel         _toast;
+        MessagePopupPanel  _messagePopup;
 
         readonly Stack<PopupPanel> _popupStack = new Stack<PopupPanel>();
 
@@ -33,6 +41,39 @@ namespace Scarlett.UI
         public IntroPanel    Intro    { get { if (_intro    == null) _intro    = Spawn(introPanelPrefab);    return _intro;    } }
         public OpeningPanel  Opening  { get { if (_opening  == null) _opening  = Spawn(openingPanelPrefab);  return _opening;  } }
 
+        public void ShowSettingPopup()
+        {
+            if (_settingPopup == null)
+            {
+                if (settingPopupPrefab == null) { Debug.LogError("[GameUI] SettingPopup 프리팹 없음"); return; }
+                _settingPopup = Spawn(settingPopupPrefab);
+            }
+            _settingPopup.Show();
+        }
+
+        public void ShowSaveStoryPanel(bool saveMode, Scarlett.Story.StoryRunner runner)
+        {
+            if (_saveStoryPanel == null)
+            {
+                if (saveStoryPanelPrefab == null) { Debug.LogError("[GameUI] SaveStoryPanel 프리팹 없음"); return; }
+                _saveStoryPanel = Spawn(saveStoryPanelPrefab);
+            }
+            if (saveMode) _saveStoryPanel.OpenForSave(runner);
+            else          _saveStoryPanel.OpenForLoad();
+
+        }
+
+        public void GoToTitle()
+        {
+            _settingPopup?.Hide();
+            _dialogue?.Hide();
+            var runner = FindObjectOfType<Scarlett.Story.StoryRunner>();
+            Intro.Setup(
+                onStart:    () => runner?.StartNewGame(),
+                onContinue: Scarlett.Story.StoryRunner.HasSave ? (System.Action)(() => runner?.ContinueGame()) : null
+            );
+        }
+
         public PopupPanel ShowPopup(string message, string confirm = "확인", string cancel = null,
                                     System.Action onConfirm = null, System.Action onCancel = null)
         {
@@ -42,6 +83,26 @@ namespace Scarlett.UI
             popup.Show();
             _popupStack.Push(popup);
             return popup;
+        }
+
+        public void ShowMessagePopup(PopupMessageType type, System.Action onConfirm = null, System.Action onCancel = null)
+        {
+            if (_messagePopup == null)
+            {
+                if (messagePopupPrefab == null) { Debug.LogError("[GameUI] MessagePopupPanel 프리팹 없음"); return; }
+                _messagePopup = Spawn(messagePopupPrefab);
+            }
+            _messagePopup.Setup(type, onConfirm, onCancel);
+        }
+
+        public void ShowToast(ToastType type)
+        {
+            if (_toast == null)
+            {
+                if (toastPanelPrefab == null) { Debug.LogError("[GameUI] ToastPanel 프리팹 없음"); return; }
+                _toast = Spawn(toastPanelPrefab);
+            }
+            _toast.ShowToast(type);
         }
 
         public void CloseTopPopup()

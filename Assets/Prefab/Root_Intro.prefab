@@ -1047,7 +1047,7 @@ GameObject:
   - component: {fileID: 1652233184945330958}
   - component: {fileID: 428094356849364249}
   m_Layer: 0
-  m_Name: UI_IntroPanel
+  m_Name: Root_Intro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

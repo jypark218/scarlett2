@@ -37,6 +37,20 @@ namespace Scarlett.Story
             SaveManager.Save(storyJsonPath, _player);
         }
 
+        public void SaveToSlot(int slotIndex)
+        {
+            if (_player == null) return;
+            SaveManager.SaveSlot(slotIndex, storyJsonPath, _player);
+        }
+
+        public void ContinueFromSlot(SaveSlotData data)
+        {
+            if (data == null || data.IsEmpty) return;
+            LoadGraph(data.storyJsonPath, data.progress);
+            _player.TryEnter(data.currentNodeId);
+            ShowCurrentNode();
+        }
+
         public static bool HasSave => SaveManager.HasSave;
 
         void LoadGraph(string path = null, StoryProgress existingProgress = null)
@@ -59,27 +73,37 @@ namespace Scarlett.Story
             var cur = _player?.Current;
             if (cur == null) { ShowEnding(null); return; }
 
-            SaveGame();
-
-            // 엔딩 노드 처리
             if (cur.isEnding)
             {
                 ShowNodeText(cur);
                 return;
             }
 
-            var choices = _player.GetAvailableChoices();
-            if (choices.Count > 0)
+            var choices   = _player.GetAvailableChoices();
+            bool hasText  = !string.IsNullOrWhiteSpace(cur.text);
+            bool hasChoices = choices.Count > 0;
+
+            if (hasText && hasChoices)
             {
-                var labels = new string[choices.Count];
-                for (int i = 0; i < choices.Count; i++)
-                    labels[i] = choices[i].text ?? $"선택지 {i + 1}";
-                GameUI.Instance.Dialogue.SetChoices(labels, OnChoiceSelected);
+                // 텍스트 먼저 보여주고, next 클릭 후 선택지 표시
+                ShowNodeText(cur, onNext: () => ShowChoices(choices));
+            }
+            else if (hasChoices)
+            {
+                ShowChoices(choices);
             }
             else
             {
                 ShowNodeText(cur, onNext: OnNextClicked);
             }
+        }
+
+        void ShowChoices(System.Collections.Generic.IReadOnlyList<Choice> choices)
+        {
+            var labels = new string[choices.Count];
+            for (int i = 0; i < choices.Count; i++)
+                labels[i] = choices[i].text ?? $"선택지 {i + 1}";
+            GameUI.Instance.Dialogue.SetChoices(labels, OnChoiceSelected);
         }
 
         void ShowNodeText(StoryNode node, System.Action onNext = null)
@@ -112,7 +136,10 @@ namespace Scarlett.Story
             if (after == null || after == before)
                 ShowEnding(null);
             else
+            {
+                SaveGame();
                 ShowCurrentNode();
+            }
         }
 
         void ShowEnding(StoryNode endingNode)

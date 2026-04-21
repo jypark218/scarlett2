@@ -56,8 +56,8 @@ namespace Scarlett.UI
                     int index = i;
                     btn.onClick.AddListener(() =>
                     {
-                        onSelect?.Invoke(index);
                         choiceGroup?.SetActive(false);
+                        onSelect?.Invoke(index);
                     });
                 }
                 else
@@ -68,6 +68,8 @@ namespace Scarlett.UI
 
             choiceGroup?.SetActive(true);
         }
+
+        public void OnClickSetting() => GameUI.Instance?.ShowSettingPopup();
 
         /// <summary>다음 버튼 onClick에 연결</summary>
         public void OnNextClicked()
