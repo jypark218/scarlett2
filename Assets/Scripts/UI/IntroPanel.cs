@@ -24,7 +24,7 @@ namespace Scarlett.UI
 
         public void OnClickStart()   { Hide(); _onStart?.Invoke(); }
         public void OnClickContinue() { Hide(); _onContinue?.Invoke(); }
-        public void OnClickSetting() { GameUI.Instance?.ShowPopup("설정 기능은 준비 중입니다."); }
+        public void OnClickSetting() => GameUI.Instance?.ShowSettingPopup();
         public void OnClickCredits() { Debug.Log("[IntroPanel] Credits - 미구현"); }
         public void OnClickExit()
         {

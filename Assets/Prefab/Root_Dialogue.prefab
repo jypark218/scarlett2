@@ -1876,7 +1876,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Scarlett.UI.DialoguePanel
   speakerText: {fileID: 346937893820618653}
   dialogueText: {fileID: 8578278685411728098}
-  characterImage: {fileID: 0}
+  characterSlots:
+  - {fileID: 2595871079173207730}
+  - {fileID: 7985416773609886005}
+  - {fileID: 682355951856871106}
   choiceGroup: {fileID: 6454125431901495252}
   choiceButtons:
   - {fileID: 8877390962486830026}
@@ -3426,6 +3429,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 781429911071840548, guid: 3d7f1e6c3b3b8fb4fa35e3049c251c9b, type: 3}
   m_PrefabInstance: {fileID: 3969311754935257665}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7985416773609886005 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6468350206642772852, guid: 3d7f1e6c3b3b8fb4fa35e3049c251c9b, type: 3}
+  m_PrefabInstance: {fileID: 3969311754935257665}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02951e316b4e24c7eb849f5eed07a1c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scarlett.UI.DialogueCharacterSlot
 --- !u!1001 &5817530464474840502
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3523,6 +3537,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d7f1e6c3b3b8fb4fa35e3049c251c9b, type: 3}
+--- !u!114 &682355951856871106 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6468350206642772852, guid: 3d7f1e6c3b3b8fb4fa35e3049c251c9b, type: 3}
+  m_PrefabInstance: {fileID: 5817530464474840502}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02951e316b4e24c7eb849f5eed07a1c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scarlett.UI.DialogueCharacterSlot
 --- !u!224 &6513391982625449106 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 781429911071840548, guid: 3d7f1e6c3b3b8fb4fa35e3049c251c9b, type: 3}
@@ -3625,6 +3650,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d7f1e6c3b3b8fb4fa35e3049c251c9b, type: 3}
+--- !u!114 &2595871079173207730 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6468350206642772852, guid: 3d7f1e6c3b3b8fb4fa35e3049c251c9b, type: 3}
+  m_PrefabInstance: {fileID: 9061894202045001158}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02951e316b4e24c7eb849f5eed07a1c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scarlett.UI.DialogueCharacterSlot
 --- !u!224 &8582280474466792674 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 781429911071840548, guid: 3d7f1e6c3b3b8fb4fa35e3049c251c9b, type: 3}

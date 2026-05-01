@@ -115,15 +115,21 @@ namespace Scarlett.Story
             var displayName = !string.IsNullOrEmpty(speakerId)
                 ? (binding?.displayName ?? speakerId)
                 : null;
-            var color   = binding != null ? binding.nameColor : UnityEngine.Color.white;
-            var sprite  = binding?.GetSprite(node.expressionKey ?? "default");
-            var text    = StripNameTags(string.IsNullOrEmpty(node.text) ? " " : node.text);
-            GameUI.Instance.Dialogue.SetDialogue(displayName, text, color, sprite, onNext: onNext ?? (() => ShowEnding(node)));
+            var color  = binding != null ? binding.nameColor : UnityEngine.Color.white;
+            var sprite = binding?.GetSprite(node.expressionKey ?? "default");
+            var text   = StripNameTags(string.IsNullOrEmpty(node.text) ? " " : node.text);
+            GameUI.Instance.Dialogue.SetDialogue(speakerId, displayName, text, color, sprite, onNext: onNext ?? (() => ShowEnding(node)));
         }
 
-        static readonly Regex _nameTagRegex = new Regex(@"^\[.*?\]:\s*", RegexOptions.Multiline);
+        static readonly Regex _nameTagRegex     = new Regex(@"^\[.*?\]:\s*", RegexOptions.Multiline);
+        static readonly Regex _multiNewlineRegex = new Regex(@"\n{2,}");
 
-        static string StripNameTags(string text) => _nameTagRegex.Replace(text, string.Empty);
+        static string StripNameTags(string text)
+        {
+            text = _nameTagRegex.Replace(text, string.Empty);
+            text = _multiNewlineRegex.Replace(text, "\n");
+            return text.Trim();
+        }
 
         void OnNextClicked()
         {

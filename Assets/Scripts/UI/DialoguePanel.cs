@@ -30,6 +30,16 @@ namespace Scarlett.UI
 
         readonly List<LogEntry> _history = new List<LogEntry>();
 
+        void Awake()
+        {
+            ClearCharacterSlots();
+            if (dialogueText != null)
+            {
+                dialogueText.overflowMode = TMPro.TextOverflowModes.Truncate;
+                dialogueText.enableAutoSizing = false;
+            }
+        }
+
         public void SetDialogue(string speakerId, string displayName, string text, Color speakerColor = default, Sprite portrait = null, Action onNext = null)
         {
             _onNext = onNext;

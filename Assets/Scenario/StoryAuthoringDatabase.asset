@@ -17,46 +17,81 @@ MonoBehaviour:
     displayName: 홈즈
     nameColor: {r: 0.31, g: 0.58, b: 0.89, a: 1}
     portraitResourceKey:
+    expressions:
+    - expressionKey: default
+      sprite: {fileID: 21300000, guid: bee9e9a9853958a419f8efb0b7eacfae, type: 3}
+    - expressionKey: happy
+      sprite: {fileID: 21300000, guid: 75b0524294b544d36bf050c3780d9175, type: 3}
+    - expressionKey: sad
+      sprite: {fileID: 21300000, guid: 4279077352f3d47bfac0857b6aa86ebf, type: 3}
+    - expressionKey: angry
+      sprite: {fileID: 21300000, guid: 600d204d8390248adb786a2e7d81c5ea, type: 3}
+    - expressionKey: serious
+      sprite: {fileID: 21300000, guid: 69f97246a23c54f7da4b291529c5e7cf, type: 3}
+    - expressionKey: surprised
+      sprite: {fileID: 21300000, guid: 43303d169af5e4e46ac3193c5aac933f, type: 3}
   - speakerId: watson
     displayName: 왓슨
     nameColor: {r: 0.89, g: 0.65, b: 0.27, a: 1}
     portraitResourceKey:
+    expressions:
+    - expressionKey: default
+      sprite: {fileID: 21300000, guid: 5249dbc3acb9847738e07606d6babe9a, type: 3}
+    - expressionKey: happy
+      sprite: {fileID: 21300000, guid: 5ddbc0729afce4975bd4aaa5d5668153, type: 3}
+    - expressionKey: sad
+      sprite: {fileID: 21300000, guid: 47c0127ab94564508b16933688da1501, type: 3}
+    - expressionKey: angry
+      sprite: {fileID: 21300000, guid: 1f92d4837327f45abafad0cbcb56c804, type: 3}
+    - expressionKey: serious
+      sprite: {fileID: 21300000, guid: e22017743c9f840ea89a35d40a9652c7, type: 3}
+    - expressionKey: surprised
+      sprite: {fileID: 21300000, guid: 8f06842ca5c6d4ce9ae05c56da928ecb, type: 3}
   - speakerId: ellen
     displayName: 엘렌
     nameColor: {r: 0.93, g: 0.49, b: 0.62, a: 1}
     portraitResourceKey:
+    expressions: []
   - speakerId: gregson
     displayName: 그렉슨
     nameColor: {r: 0.36, g: 0.73, b: 0.54, a: 1}
     portraitResourceKey:
+    expressions: []
   - speakerId: drebber
     displayName: 드레버
     nameColor: {r: 0.82, g: 0.27, b: 0.27, a: 1}
     portraitResourceKey:
+    expressions: []
   - speakerId: hope
     displayName: 호프
     nameColor: {r: 0.93, g: 0.56, b: 0.28, a: 1}
     portraitResourceKey:
+    expressions: []
   - speakerId: innkeeper
     displayName: 여관 주인
     nameColor: {r: 0.76, g: 0.66, b: 0.47, a: 1}
     portraitResourceKey:
+    expressions: []
   - speakerId: count
     displayName: 카운트
     nameColor: {r: 0.62, g: 0.38, b: 0.82, a: 1}
     portraitResourceKey:
+    expressions: []
   - speakerId: stangerson
     displayName: 스탱거슨
     nameColor: {r: 0.53, g: 0.62, b: 0.72, a: 1}
     portraitResourceKey:
+    expressions: []
   - speakerId: unknown
     displayName: 알 수 없음
     nameColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
     portraitResourceKey:
+    expressions: []
   - speakerId: narrator
     displayName: 나레이터
     nameColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
     portraitResourceKey:
+    expressions: []
   locations: []
   items: []
   insights: []
