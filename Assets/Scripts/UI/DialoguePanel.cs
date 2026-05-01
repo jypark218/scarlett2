@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,9 @@ namespace Scarlett.UI
         [Header("대사")]
         [SerializeField] TMP_Text speakerText;
         [SerializeField] TMP_Text dialogueText;
+
+        [Header("캐릭터 슬롯 (CharPivot 하위 순서대로)")]
+        [SerializeField] DialogueCharacterSlot[] characterSlots;
 
         [Header("선택지")]
         [SerializeField] GameObject choiceGroup;
@@ -24,21 +28,66 @@ namespace Scarlett.UI
         Coroutine _typewriter;
         Action    _onNext;
 
-        public void SetDialogue(string speaker, string text, Action onNext = null)
+        readonly List<LogEntry> _history = new List<LogEntry>();
+
+        public void SetDialogue(string speakerId, string displayName, string text, Color speakerColor = default, Sprite portrait = null, Action onNext = null)
         {
             _onNext = onNext;
 
             if (speakerText != null)
             {
-                speakerText.gameObject.SetActive(!string.IsNullOrEmpty(speaker));
-                speakerText.text = speaker ?? string.Empty;
+                speakerText.gameObject.SetActive(!string.IsNullOrEmpty(displayName));
+                speakerText.text  = displayName ?? string.Empty;
+                speakerText.color = speakerColor == default ? Color.white : speakerColor;
             }
+
+            UpdateCharacterSlots(speakerId, portrait);
+
+            if (!string.IsNullOrEmpty(displayName))
+                _history.Add(new LogEntry { Speaker = displayName, Text = text ?? string.Empty, SpeakerColor = speakerColor });
 
             choiceGroup?.SetActive(false);
             Show();
 
             if (_typewriter != null) StopCoroutine(_typewriter);
             _typewriter = StartCoroutine(TypewriterRoutine(text ?? string.Empty));
+        }
+
+        void UpdateCharacterSlots(string speakerId, Sprite portrait)
+        {
+            if (characterSlots == null || characterSlots.Length == 0) return;
+
+            // 나래이션이거나 이미지가 없는 캐릭터면 슬롯 상태 유지, 포커스만 해제
+            if (string.IsNullOrEmpty(speakerId) || portrait == null)
+            {
+                foreach (var slot in characterSlots)
+                    if (slot != null) slot.SetFocus(false);
+                return;
+            }
+
+            // 이미 이 캐릭터가 들어있는 슬롯 찾기
+            DialogueCharacterSlot target = null;
+            foreach (var slot in characterSlots)
+                if (slot != null && slot.SpeakerId == speakerId) { target = slot; break; }
+
+            // 없으면 빈 슬롯에 배정
+            if (target == null)
+                foreach (var slot in characterSlots)
+                    if (slot != null && string.IsNullOrEmpty(slot.SpeakerId)) { target = slot; break; }
+
+            if (target == null) return;
+
+            target.Assign(speakerId, portrait);
+
+            foreach (var slot in characterSlots)
+                if (slot != null) slot.SetFocus(slot == target);
+        }
+
+        public void ClearCharacterSlots()
+        {
+            if (characterSlots == null) return;
+            foreach (var slot in characterSlots)
+                slot?.Clear();
         }
 
         public void SetChoices(string[] labels, Action<int> onSelect)
@@ -71,7 +120,8 @@ namespace Scarlett.UI
 
         public void OnClickSetting() => GameUI.Instance?.ShowSettingPopup();
 
-        /// <summary>다음 버튼 onClick에 연결</summary>
+        public void OnClickLog() => GameUI.Instance?.ShowLogPanel(_history);
+
         public void OnNextClicked()
         {
             if (_isRevealing)

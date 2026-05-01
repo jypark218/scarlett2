@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Scarlett.UI;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace Scarlett.Story
     {
         [SerializeField] string storyJsonPath  = "Story/ScarlettFullGraph";
         [SerializeField] string startNodeId    = "start";
+        [SerializeField] StoryAuthoringDatabase authoringDatabase;
 
         StoryNodePlayer _player;
 
@@ -64,7 +66,7 @@ namespace Scarlett.Story
             if (list?.nodes == null || list.nodes.Length == 0) { Debug.LogError("[StoryRunner] 노드 없음"); return; }
 
             Debug.Log($"[StoryRunner] 노드 {list.nodes.Length}개 로드됨");
-            _player = new StoryNodePlayer(existingProgress: existingProgress);
+            _player = new StoryNodePlayer(authoring: authoringDatabase, existingProgress: existingProgress);
             _player.SetGraph(list.nodes);
         }
 
@@ -108,10 +110,20 @@ namespace Scarlett.Story
 
         void ShowNodeText(StoryNode node, System.Action onNext = null)
         {
-            var speaker = string.IsNullOrEmpty(node.speakerId) ? null : node.speakerId;
-            var text    = string.IsNullOrEmpty(node.text)     ? " "  : node.text;
-            GameUI.Instance.Dialogue.SetDialogue(speaker, text, onNext: onNext ?? (() => ShowEnding(node)));
+            var binding     = _player.ResolveSpeaker();
+            var speakerId   = node.speakerId;
+            var displayName = !string.IsNullOrEmpty(speakerId)
+                ? (binding?.displayName ?? speakerId)
+                : null;
+            var color   = binding != null ? binding.nameColor : UnityEngine.Color.white;
+            var sprite  = binding?.GetSprite(node.expressionKey ?? "default");
+            var text    = StripNameTags(string.IsNullOrEmpty(node.text) ? " " : node.text);
+            GameUI.Instance.Dialogue.SetDialogue(displayName, text, color, sprite, onNext: onNext ?? (() => ShowEnding(node)));
         }
+
+        static readonly Regex _nameTagRegex = new Regex(@"^\[.*?\]:\s*", RegexOptions.Multiline);
+
+        static string StripNameTags(string text) => _nameTagRegex.Replace(text, string.Empty);
 
         void OnNextClicked()
         {

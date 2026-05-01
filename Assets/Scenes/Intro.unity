@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 1569ecf255b22496fbae5c9cde3215f6, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -434,6 +434,11 @@ MonoBehaviour:
   introPanelPrefab: {fileID: 428094356849364249, guid: 4b2201d75bf1b0c4e99cfd14f83f415b, type: 3}
   popupPanelPrefab: {fileID: 0}
   openingPanelPrefab: {fileID: 7928433782786350118, guid: 16475fa274d3d3a4483c12880d04c636, type: 3}
+  settingPopupPrefab: {fileID: 1730068103321286539, guid: a0b88d452a652254db83451d255d6709, type: 3}
+  saveStoryPanelPrefab: {fileID: 5365756352674185105, guid: c6850a45e81b5694d81609fb0a057584, type: 3}
+  toastPanelPrefab: {fileID: 7589555539310477194, guid: 30a6ab26863b8af4c911a52a5eecd802, type: 3}
+  messagePopupPrefab: {fileID: 4787091097274249965, guid: 28ecc8409f5819c499c4fe241d876b2f, type: 3}
+  logPanelPrefab: {fileID: -6514592890947903965, guid: 53f0b2047b2eb486ea706e9bc9d0d6bc, type: 3}
 --- !u!114 &521588470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,6 +466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Scarlett.Story.StoryRunner
   storyJsonPath: Story/ScarlettFullGraph
   startNodeId: start
+  authoringDatabase: {fileID: 11400000, guid: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6, type: 2}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

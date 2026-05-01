@@ -19,6 +19,7 @@ namespace Scarlett.UI
         [SerializeField] SaveStoryPanel    saveStoryPanelPrefab;
         [SerializeField] ToastPanel        toastPanelPrefab;
         [SerializeField] MessagePopupPanel messagePopupPrefab;
+        [SerializeField] LogPanel          logPanelPrefab;
 
         DialoguePanel      _dialogue;
         IntroPanel         _intro;
@@ -27,6 +28,7 @@ namespace Scarlett.UI
         SaveStoryPanel     _saveStoryPanel;
         ToastPanel         _toast;
         MessagePopupPanel  _messagePopup;
+        LogPanel           _logPanel;
 
         readonly Stack<PopupPanel> _popupStack = new Stack<PopupPanel>();
 
@@ -40,6 +42,17 @@ namespace Scarlett.UI
         public DialoguePanel Dialogue { get { if (_dialogue == null) _dialogue = Spawn(dialoguePanelPrefab); return _dialogue; } }
         public IntroPanel    Intro    { get { if (_intro    == null) _intro    = Spawn(introPanelPrefab);    return _intro;    } }
         public OpeningPanel  Opening  { get { if (_opening  == null) _opening  = Spawn(openingPanelPrefab);  return _opening;  } }
+
+        public void ShowLogPanel(System.Collections.Generic.IReadOnlyList<LogEntry> history)
+        {
+            if (_logPanel == null)
+            {
+                if (logPanelPrefab == null) { Debug.LogError("[GameUI] LogPanel 프리팹 없음"); return; }
+                _logPanel = Spawn(logPanelPrefab);
+            }
+            _logPanel.Setup(history);
+            _logPanel.Show();
+        }
 
         public void ShowSettingPopup()
         {

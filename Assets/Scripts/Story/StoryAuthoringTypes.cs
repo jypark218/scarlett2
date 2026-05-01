@@ -27,12 +27,30 @@ namespace Scarlett.Story
     }
 
     [Serializable]
+    public class CharacterExpressionEntry
+    {
+        public string expressionKey;
+        public Sprite sprite;
+    }
+
+    [Serializable]
     public class CharacterVisualBinding
     {
         public string speakerId;
         public string displayName;
         public Color nameColor = Color.white;
         public string portraitResourceKey;
+        public CharacterExpressionEntry[] expressions;
+
+        public Sprite GetSprite(string expressionKey)
+        {
+            if (expressions == null || expressions.Length == 0) return null;
+            foreach (var e in expressions)
+                if (e.expressionKey == expressionKey && e.sprite != null) return e.sprite;
+            foreach (var e in expressions)
+                if (e.expressionKey == "default" && e.sprite != null) return e.sprite;
+            return expressions[0]?.sprite;
+        }
     }
 
     [Serializable]

@@ -59,6 +59,7 @@ namespace Scarlett.Story
         public string id;
         public string locationId;
         public string speakerId;
+        public string expressionKey;
         public string text;
         public Choice[] choices;
         public string nextNodeId;
