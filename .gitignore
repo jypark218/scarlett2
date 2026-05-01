@@ -75,3 +75,13 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # End of https://www.toptal.com/developers/gitignore/api/unity
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Unity auto-generated lightmap cache
+*.exr
