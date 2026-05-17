@@ -47,4 +47,64 @@ namespace Scarlett.Story
             return rule.defaultBackgroundKey;
         }
     }
+
+    /// <summary>음악 우선순위: Node(High) > Character > Node(Normal) > Background.</summary>
+    public sealed class MusicResolver
+    {
+        readonly StoryAuthoringDatabase db;
+
+        public MusicResolver(StoryAuthoringDatabase database) => db = database;
+
+        public string Resolve(StoryNode node, string currentBackgroundKey)
+        {
+            if (db == null || node == null)
+                return null;
+
+            // 1. Node (High Priority)
+            if (db.musicPerNode != null)
+            {
+                var nodeRule = db.musicPerNode.FirstOrDefault(r =>
+                    r != null && string.Equals(r.nodeId, node.id, StringComparison.Ordinal));
+                if (nodeRule != null && nodeRule.priority == MusicPriority.High)
+                    return nodeRule.trackId;
+            }
+
+            // 2. Character Theme
+            if (db.musicPerCharacter != null && !string.IsNullOrEmpty(node.speakerId))
+            {
+                var charRule = db.musicPerCharacter.FirstOrDefault(r =>
+                    r != null && string.Equals(r.characterId, node.speakerId, StringComparison.Ordinal));
+                if (charRule != null)
+                    return charRule.trackId;
+            }
+
+            // 3. Node (Normal Priority)
+            if (db.musicPerNode != null)
+            {
+                var nodeRule = db.musicPerNode.FirstOrDefault(r =>
+                    r != null && string.Equals(r.nodeId, node.id, StringComparison.Ordinal));
+                if (nodeRule != null && nodeRule.priority == MusicPriority.Normal)
+                    return nodeRule.trackId;
+            }
+
+            // 4. Background Default
+            if (db.musicPerBackground != null && !string.IsNullOrEmpty(currentBackgroundKey))
+            {
+                var bgRule = db.musicPerBackground.FirstOrDefault(r =>
+                    r != null && string.Equals(r.backgroundKey, currentBackgroundKey, StringComparison.Ordinal));
+                if (bgRule != null)
+                    return bgRule.trackId;
+            }
+
+            return null;
+        }
+
+        public MusicTrackDefinition GetTrackDefinition(string trackId)
+        {
+            if (db == null || db.musicTracks == null || string.IsNullOrEmpty(trackId))
+                return null;
+            return db.musicTracks.FirstOrDefault(t =>
+                t != null && string.Equals(t.trackId, trackId, StringComparison.Ordinal));
+        }
+    }
 }

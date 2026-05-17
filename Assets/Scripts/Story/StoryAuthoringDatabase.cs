@@ -6,12 +6,21 @@ namespace Scarlett.Story
     [CreateAssetMenu(menuName = "Scarlett/Story/Authoring Database", fileName = "StoryAuthoringDatabase")]
     public class StoryAuthoringDatabase : ScriptableObject
     {
+        [Header("Basics")]
         public CharacterVisualBinding[] characters;
         public LocationBackgroundRule[] locations;
         public ItemDefinition[] items;
         public InsightDefinition[] insights;
+
+        [Header("Rules")]
         public ExclusiveFlagGroup[] exclusiveFlagGroups;
         public EvidencePressRow[] crossExaminationRows;
         public EndingRouteKey[] endingRoutes;
+
+        [Header("Music")]
+        public MusicTrackDefinition[] musicTracks;
+        public MusicNodeRule[] musicPerNode;
+        public MusicCharacterRule[] musicPerCharacter;
+        public MusicBackgroundRule[] musicPerBackground;
     }
 }

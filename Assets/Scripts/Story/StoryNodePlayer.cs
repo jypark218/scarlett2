@@ -14,6 +14,7 @@ namespace Scarlett.Story
         readonly Dictionary<string, StoryNode> _nodes = new(StringComparer.Ordinal);
         readonly CharacterPortraitResolver _portraits;
         readonly BackgroundResolver _backgrounds;
+        readonly MusicResolver _music;
 
         public StoryProgress Progress { get; }
         public string CurrentNodeId { get; private set; }
@@ -26,6 +27,7 @@ namespace Scarlett.Story
             Progress = existingProgress ?? StoryProgress.CreateEmpty();
             _portraits = new CharacterPortraitResolver(authoring);
             _backgrounds = new BackgroundResolver(authoring);
+            _music = new MusicResolver(authoring);
         }
 
         public void SetGraph(IEnumerable<StoryNode> nodes)
@@ -146,6 +148,12 @@ namespace Scarlett.Story
 
         public string ResolveBackgroundKey() =>
             _backgrounds.Resolve(Current);
+
+        public string ResolveMusicTrackId() =>
+            _music.Resolve(Current, ResolveBackgroundKey());
+
+        public MusicTrackDefinition GetMusicTrackDefinition(string trackId) =>
+            _music.GetTrackDefinition(trackId);
 
         static void AppendUnique(ref string[] arr, string id)
         {
