@@ -53,7 +53,7 @@ MonoBehaviour:
     portraitResourceKey:
     expressions: []
   - speakerId: gregson
-    displayName: 그렉슨
+    displayName: 그레그슨
     nameColor: {r: 0.36, g: 0.73, b: 0.54, a: 1}
     portraitResourceKey:
     expressions: []

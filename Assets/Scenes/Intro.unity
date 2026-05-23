@@ -464,7 +464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0197f60ac91e47b43b4147d582cac428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scarlett.Story.StoryRunner
-  storyJsonPath: Story/ScarlettFullGraph
+  storyJsonPath: Story/MainStoryData
   startNodeId: start
   authoringDatabase: {fileID: 11400000, guid: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6, type: 2}
 --- !u!1 &832575517

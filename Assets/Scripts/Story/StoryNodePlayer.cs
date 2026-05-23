@@ -15,6 +15,7 @@ namespace Scarlett.Story
         readonly CharacterPortraitResolver _portraits;
         readonly BackgroundResolver _backgrounds;
         readonly MusicResolver _music;
+        string _firstNodeId;
 
         public StoryProgress Progress { get; }
         public string CurrentNodeId { get; private set; }
@@ -33,6 +34,7 @@ namespace Scarlett.Story
         public void SetGraph(IEnumerable<StoryNode> nodes)
         {
             _nodes.Clear();
+            _firstNodeId = null;
             CurrentNodeId = null;
             if (nodes == null) return;
 
@@ -42,6 +44,7 @@ namespace Scarlett.Story
                 total++;
                 if (n == null || string.IsNullOrEmpty(n.id)) { skipped++; continue; }
                 _nodes[n.id] = n;
+                if (_firstNodeId == null) _firstNodeId = n.id;
             }
             UnityEngine.Debug.Log($"[StoryNodePlayer] SetGraph: 전체 {total}, 등록 {_nodes.Count}, 스킵(id없음) {skipped}");
             if (_nodes.Count > 0)
@@ -68,8 +71,7 @@ namespace Scarlett.Story
 
         public string GetFirstNodeId()
         {
-            foreach (var key in _nodes.Keys) return key;
-            return null;
+            return _firstNodeId;
         }
 
         public bool TryEnter(string nodeId)

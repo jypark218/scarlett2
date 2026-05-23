@@ -44,12 +44,38 @@ namespace Scarlett.Story
 
         public Sprite GetSprite(string expressionKey)
         {
-            if (expressions == null || expressions.Length == 0) return null;
-            foreach (var e in expressions)
-                if (e.expressionKey == expressionKey && e.sprite != null) return e.sprite;
-            foreach (var e in expressions)
-                if (e.expressionKey == "default" && e.sprite != null) return e.sprite;
-            return expressions[0]?.sprite;
+            // 1. 인스펙터에 수동으로 등록된 리스트에서 먼저 검색
+            if (expressions != null && expressions.Length > 0)
+            {
+                foreach (var e in expressions)
+                    if (e.expressionKey == expressionKey && e.sprite != null) return e.sprite;
+                
+                // 요청한 표정이 없으면 기본(default) 표정 시도
+                foreach (var e in expressions)
+                    if (e.expressionKey == "default" && e.sprite != null) return e.sprite;
+            }
+
+            // 2. 수동 등록된 게 없으면 Resources 폴더에서 파일 이름으로 자동 검색
+            // 규칙: UISprites/Character/{speakerId}_{expressionKey}
+            if (!string.IsNullOrEmpty(speakerId))
+            {
+                string basePath = "UISprites/Character";
+                string path = $"{basePath}/{speakerId}_{expressionKey}";
+                var autoSprite = Resources.Load<Sprite>(path);
+                
+                if (autoSprite != null) return autoSprite;
+
+                // 특정 표정 파일이 없으면 default 파일로 재시도
+                if (expressionKey != "default")
+                {
+                    path = $"{basePath}/{speakerId}_default";
+                    autoSprite = Resources.Load<Sprite>(path);
+                    if (autoSprite != null) return autoSprite;
+                }
+            }
+
+            // 3. 모두 실패 시 첫 번째 등록된 이미지라도 반환
+            return (expressions != null && expressions.Length > 0) ? expressions[0]?.sprite : null;
         }
     }
 

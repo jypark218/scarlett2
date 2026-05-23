@@ -4,14 +4,21 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 namespace Scarlett.UI
 {
     public class DialoguePanel : UIPanel
     {
-        [Header("대사")]
+        [Header("대사 / 나레이션")]
         [SerializeField] TMP_Text speakerText;
+        [SerializeField] GameObject dialogueGroup;
         [SerializeField] TMP_Text dialogueText;
+        [SerializeField] GameObject narrationGroup;
+        [SerializeField] TMP_Text narrationText;
+
+        [Header("아이템 정보")]
+        [SerializeField] Image itemImage;
 
         [Header("캐릭터 슬롯 (CharPivot 하위 순서대로)")]
         [SerializeField] DialogueCharacterSlot[] characterSlots;
@@ -27,16 +34,35 @@ namespace Scarlett.UI
         bool      _isRevealing;
         Coroutine _typewriter;
         Action    _onNext;
+        TMP_Text  _activeText;
 
         readonly List<LogEntry> _history = new List<LogEntry>();
 
         void Awake()
         {
             ClearCharacterSlots();
+            if (itemImage != null) itemImage.gameObject.SetActive(false);
             if (dialogueText != null)
             {
                 dialogueText.overflowMode = TMPro.TextOverflowModes.Truncate;
                 dialogueText.enableAutoSizing = false;
+            }
+            if (narrationText != null)
+            {
+                narrationText.overflowMode = TMPro.TextOverflowModes.Truncate;
+                narrationText.enableAutoSizing = false;
+            }
+        }
+
+        void Update()
+        {
+            // 패널이 활성화되어 있고, 선택지 창이 꺼져 있을 때만 스페이스바 입력 허용
+            if (gameObject.activeInHierarchy && (choiceGroup == null || !choiceGroup.activeSelf))
+            {
+                if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+                {
+                    OnNextClicked();
+                }
             }
         }
 
@@ -44,16 +70,24 @@ namespace Scarlett.UI
         {
             _onNext = onNext;
 
+            bool isNarration = string.IsNullOrEmpty(speakerId);
+
+            // UI 그룹 활성화 제어
+            dialogueGroup?.SetActive(!isNarration);
+            narrationGroup?.SetActive(isNarration);
+            _activeText = isNarration ? narrationText : dialogueText;
+
             if (speakerText != null)
             {
-                speakerText.gameObject.SetActive(!string.IsNullOrEmpty(displayName));
+                speakerText.gameObject.SetActive(!isNarration && !string.IsNullOrEmpty(displayName));
                 speakerText.text  = displayName ?? string.Empty;
                 speakerText.color = speakerColor == default ? Color.white : speakerColor;
             }
 
             UpdateCharacterSlots(speakerId, portrait);
 
-            if (!string.IsNullOrEmpty(displayName))
+            // 로그 기록: 나레이션이 아니고 발화자 이름이 있을 때만 기록
+            if (!isNarration && !string.IsNullOrEmpty(displayName))
                 _history.Add(new LogEntry { Speaker = displayName, Text = text ?? string.Empty, SpeakerColor = speakerColor });
 
             choiceGroup?.SetActive(false);
@@ -61,6 +95,20 @@ namespace Scarlett.UI
 
             if (_typewriter != null) StopCoroutine(_typewriter);
             _typewriter = StartCoroutine(TypewriterRoutine(text ?? string.Empty));
+        }
+
+        public void SetItemImage(Sprite sprite)
+        {
+            if (itemImage == null) return;
+            if (sprite == null)
+            {
+                itemImage.gameObject.SetActive(false);
+            }
+            else
+            {
+                itemImage.gameObject.SetActive(true);
+                itemImage.sprite = sprite;
+            }
         }
 
         void UpdateCharacterSlots(string speakerId, Sprite portrait)
@@ -137,7 +185,7 @@ namespace Scarlett.UI
             if (_isRevealing)
             {
                 StopTypewriter();
-                if (dialogueText != null) dialogueText.text = _fullText;
+                if (_activeText != null) _activeText.text = _fullText;
             }
             else
             {
@@ -157,10 +205,10 @@ namespace Scarlett.UI
         {
             _fullText    = text;
             _isRevealing = true;
-            if (dialogueText != null) dialogueText.text = string.Empty;
+            if (_activeText != null) _activeText.text = string.Empty;
             foreach (char c in text)
             {
-                if (dialogueText != null) dialogueText.text += c;
+                if (_activeText != null) _activeText.text += c;
                 yield return new WaitForSeconds(charInterval);
             }
             _isRevealing = false;
