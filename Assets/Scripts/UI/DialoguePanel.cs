@@ -66,7 +66,7 @@ namespace Scarlett.UI
             }
         }
 
-        public void SetDialogue(string speakerId, string displayName, string text, Color speakerColor = default, Sprite portrait = null, Action onNext = null)
+        public void SetDialogue(string speakerId, string displayName, string text, Color speakerColor = default, Sprite portrait = null, Action onNext = null, string nodeSpeakerId = null)
         {
             _onNext = onNext;
 
@@ -84,7 +84,7 @@ namespace Scarlett.UI
                 speakerText.color = speakerColor == default ? Color.white : speakerColor;
             }
 
-            UpdateCharacterSlots(speakerId, portrait);
+            UpdateCharacterSlots(speakerId, portrait, nodeSpeakerId);
 
             // 로그 기록: 나레이션이 아니고 발화자 이름이 있을 때만 기록
             if (!isNarration && !string.IsNullOrEmpty(displayName))
@@ -111,24 +111,32 @@ namespace Scarlett.UI
             }
         }
 
-        void UpdateCharacterSlots(string speakerId, Sprite portrait)
+        void UpdateCharacterSlots(string speakerId, Sprite portrait, string nodeSpeakerId = null)
         {
             if (characterSlots == null || characterSlots.Length == 0) return;
 
-            // 나래이션이거나 이미지가 없는 캐릭터면 슬롯 상태 유지, 포커스만 해제
+            // 1. 현재 문단이 나레이션인 경우
             if (string.IsNullOrEmpty(speakerId) || portrait == null)
             {
-                foreach (var slot in characterSlots)
-                    if (slot != null) slot.SetFocus(false);
+                // 노드 자체에도 화자가 없는 '순수 나레이션' 노드라면 이미지 제거
+                if (string.IsNullOrEmpty(nodeSpeakerId))
+                {
+                    ClearCharacterSlots();
+                }
+                else
+                {
+                    // 대화 노드 중 잠깐 나오는 나레이션이라면 이미지는 유지하되 포커스만 해제
+                    foreach (var slot in characterSlots)
+                        if (slot != null) slot.SetFocus(false);
+                }
                 return;
             }
 
-            // 이미 이 캐릭터가 들어있는 슬롯 찾기
+            // 2. 캐릭터 대사 시 처리 로직 (기존과 동일)
             DialogueCharacterSlot target = null;
             foreach (var slot in characterSlots)
                 if (slot != null && slot.SpeakerId == speakerId) { target = slot; break; }
 
-            // 없으면 빈 슬롯에 배정
             if (target == null)
                 foreach (var slot in characterSlots)
                     if (slot != null && string.IsNullOrEmpty(slot.SpeakerId)) { target = slot; break; }

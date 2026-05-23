@@ -17,6 +17,10 @@ namespace Scarlett.Story
         {
             LoadGraph();
             if (_player == null) { Debug.LogError("[StoryRunner] LoadGraph 실패 - _player null"); return; }
+            
+            // 기존 캐릭터 포트레이트 초기화
+            GameUI.Instance.Dialogue.ClearCharacterSlots();
+
             var entered = _player.TryEnter(startNodeId);
             ShowCurrentNode();
         }
@@ -29,6 +33,10 @@ namespace Scarlett.Story
                 return;
             }
             LoadGraph(path, progress);
+
+            // 기존 캐릭터 포트레이트 초기화
+            GameUI.Instance.Dialogue.ClearCharacterSlots();
+
             _player.TryEnter(nodeId);
             ShowCurrentNode();
         }
