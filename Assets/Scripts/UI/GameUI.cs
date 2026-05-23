@@ -20,6 +20,7 @@ namespace Scarlett.UI
         [SerializeField] ToastPanel        toastPanelPrefab;
         [SerializeField] MessagePopupPanel messagePopupPrefab;
         [SerializeField] LogPanel          logPanelPrefab;
+        [SerializeField] CheatPanel        cheatPanelPrefab;
 
         DialoguePanel      _dialogue;
         IntroPanel         _intro;
@@ -29,6 +30,7 @@ namespace Scarlett.UI
         ToastPanel         _toast;
         MessagePopupPanel  _messagePopup;
         LogPanel           _logPanel;
+        CheatPanel         _cheatPanel;
 
         readonly Stack<PopupPanel> _popupStack = new Stack<PopupPanel>();
 
@@ -37,6 +39,28 @@ namespace Scarlett.UI
             if (Instance != null) { Destroy(gameObject); return; }
             Instance = this;
             if (rootUI == null) rootUI = transform;
+        }
+
+        void Update()
+        {
+            // F1 키로 치트 콘솔 토글 (New Input System 대응)
+            if (UnityEngine.InputSystem.Keyboard.current != null && 
+                UnityEngine.InputSystem.Keyboard.current.f1Key.wasPressedThisFrame)
+            {
+                ToggleCheatPanel();
+            }
+        }
+
+        public void ToggleCheatPanel()
+        {
+            if (_cheatPanel == null)
+            {
+                if (cheatPanelPrefab == null) { Debug.LogError("[GameUI] CheatPanel 프리팹이 연결되지 않았습니다."); return; }
+                _cheatPanel = Spawn(cheatPanelPrefab);
+            }
+
+            if (_cheatPanel.gameObject.activeSelf) _cheatPanel.Hide();
+            else _cheatPanel.Show();
         }
 
         public DialoguePanel Dialogue { get { if (_dialogue == null) _dialogue = Spawn(dialoguePanelPrefab); return _dialogue; } }

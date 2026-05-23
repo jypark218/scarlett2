@@ -69,6 +69,13 @@ namespace Scarlett.Story
         public StoryNode Current =>
             string.IsNullOrEmpty(CurrentNodeId) || !_nodes.TryGetValue(CurrentNodeId, out var n) ? null : n;
 
+        public StoryNode GetNode(string nodeId)
+        {
+            if (string.IsNullOrEmpty(nodeId)) return null;
+            _nodes.TryGetValue(nodeId, out var node);
+            return node;
+        }
+
         public string GetFirstNodeId()
         {
             return _firstNodeId;
@@ -96,13 +103,24 @@ namespace Scarlett.Story
             return true;
         }
 
-        /// <summary>선택 가능한 분기만 반환 (req 미충족 제외).</summary>
+        /// <summary>선택 가능한 분기만 반환 (req 미충족 제외 및 이미 방문한 노드 필터링).</summary>
         public IReadOnlyList<Choice> GetAvailableChoices()
         {
             var node = Current;
             if (node?.choices == null || node.choices.Length == 0)
                 return Array.Empty<Choice>();
-            return node.choices.Where(c => c != null && StoryConditionEvaluator.Meets(c.req, Progress)).ToList();
+
+            var baseChoices = node.choices.Where(c => c != null && StoryConditionEvaluator.Meets(c.req, Progress)).ToList();
+
+            // 이미 방문한 노드로 가는 선택지는 숨김 처리 (단서를 이미 얻었거나 확인한 내용 중복 방지)
+            var filtered = baseChoices.Where(c =>
+            {
+                if (string.IsNullOrEmpty(c.nextNodeId)) return true;
+                return !Array.Exists(Progress.visitedNodeIds ?? Array.Empty<string>(), id => id == c.nextNodeId);
+            }).ToList();
+
+            // 모든 선택지를 이미 방문했다면 다시 전체를 보여줌 (진행 불가 방지)
+            return filtered.Count > 0 ? filtered : baseChoices;
         }
 
         /// <summary>조건을 통과한 선택지 목록에서 인덱스로 진행.</summary>

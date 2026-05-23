@@ -118,12 +118,42 @@ namespace Scarlett.Story
             }
         }
 
+        string _lastSelectedChoiceLabel = null;
+
         void ShowChoices(IReadOnlyList<Choice> choices)
         {
             var labels = new string[choices.Count];
             for (int i = 0; i < choices.Count; i++)
-                labels[i] = choices[i].text ?? $"선택지 {i + 1}";
+            {
+                labels[i] = GetChoiceLabel(choices[i]) ?? $"선택지 {i + 1}";
+            }
             GameUI.Instance.Dialogue.SetChoices(labels, OnChoiceSelected);
+        }
+
+        string GetChoiceLabel(Choice c)
+        {
+            if (c == null) return null;
+            string txt = c.text;
+
+            // 텍스트가 비어있거나 ID와 동일한 경우(기획상 누락 혹은 기술적 키 노출), 타겟 노드의 텍스트를 지문으로 사용
+            if (string.IsNullOrEmpty(txt) || txt == c.nextNodeId)
+            {
+                var targetNode = _player.GetNode(c.nextNodeId);
+                if (targetNode != null && !string.IsNullOrEmpty(targetNode.text))
+                {
+                    txt = targetNode.text;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(txt))
+            {
+                // 선택지 지문에서 [item:...] 혹은 기타 [태그] 형식의 아이콘/명령어 제거
+                txt = _itemTagRegex.Replace(txt, "");
+                txt = Regex.Replace(txt, @"\[.*?\]", ""); // 모든 대괄호 태그 제거 (이름 태그 등 포함)
+                txt = txt.Trim();
+            }
+
+            return txt;
         }
 
         Queue<string> _textChunks = new Queue<string>();
@@ -139,18 +169,55 @@ namespace Scarlett.Story
             var chunks = rawText.Split(new string[] { "\n\n", "\r\n\r\n" }, System.StringSplitOptions.RemoveEmptyEntries);
             
             _textChunks.Clear();
+            bool isFirstChunk = true;
             foreach (var c in chunks)
             {
                 var trimmed = c.Trim();
-                if (!string.IsNullOrEmpty(trimmed))
-                    _textChunks.Enqueue(trimmed);
+                if (string.IsNullOrEmpty(trimmed)) continue;
+
+                // 중복 체크: 방금 누른 선택지 문구와 첫 번째 대사 내용이 같다면 스킵 (대사 중첩 방지)
+                if (isFirstChunk && !string.IsNullOrEmpty(_lastSelectedChoiceLabel))
+                {
+                    if (IsRedundant(trimmed, _lastSelectedChoiceLabel))
+                    {
+                        isFirstChunk = false;
+                        continue;
+                    }
+                }
+
+                _textChunks.Enqueue(trimmed);
+                isFirstChunk = false;
             }
 
+            _lastSelectedChoiceLabel = null; // 초기화
             ShowNextChunk();
         }
 
-        static readonly Regex _itemTagRegex = new Regex(@"\[item:(.*?)\]");
-        static readonly Regex _titleTagRegex = new Regex(@"\[title:(.*?)\]");
+        bool IsRedundant(string nodeText, string choiceLabel)
+        {
+            // 이름 태그, 따옴표, 공백, 주요 문장 부호를 제거하고 실질적인 대사 내용만 비교
+            string s1 = CleanForCompare(StripNameTags(nodeText));
+            string s2 = CleanForCompare(StripNameTags(choiceLabel));
+            return !string.IsNullOrEmpty(s1) && s1 == s2;
+        }
+
+        string CleanForCompare(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return string.Empty;
+            return text.Replace(" ", "")
+                       .Replace("\"", "")
+                       .Replace("'", "")
+                       .Replace("\n", "")
+                       .Replace("\r", "")
+                       .Replace(".", "")
+                       .Replace(",", "")
+                       .Replace("!", "")
+                       .Replace("?", "")
+                       .Replace("~", "");
+        }
+
+        static readonly Regex _itemTagRegex = new Regex(@"\[\s*item\s*:(.*?)\]", RegexOptions.IgnoreCase);
+        static readonly Regex _titleTagRegex = new Regex(@"\[\s*title\s*:(.*?)\]", RegexOptions.IgnoreCase);
 
         void ShowNextChunk()
         {
@@ -277,6 +344,12 @@ namespace Scarlett.Story
 
         void OnChoiceSelected(int index)
         {
+            var choices = _player.GetAvailableChoices();
+            if (index >= 0 && index < choices.Count)
+            {
+                _lastSelectedChoiceLabel = GetChoiceLabel(choices[index]);
+            }
+
             var before = _player.Current?.id;
             _player.TrySelectAvailableChoice(index);
             var after = _player.Current?.id;

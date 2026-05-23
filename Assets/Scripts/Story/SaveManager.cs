@@ -21,6 +21,27 @@ namespace Scarlett.Story
         public static bool HasSave =>
             PlayerPrefs.HasKey(AutoSaveKey) || Enumerable.Range(0, SlotCount).Any(i => PlayerPrefs.HasKey(SlotKey(i)));
 
+        public static bool HasAnyEnding
+        {
+            get
+            {
+                if (PlayerPrefs.HasKey(AutoSaveKey))
+                {
+                    var data = JsonConvert.DeserializeObject<AutoSaveData>(PlayerPrefs.GetString(AutoSaveKey));
+                    if (data?.progress?.endings != null && data.progress.endings.Any(e => e.isUnlocked))
+                        return true;
+                }
+
+                for (int i = 0; i < SlotCount; i++)
+                {
+                    var slot = LoadSlot(i);
+                    if (slot?.progress?.endings != null && slot.progress.endings.Any(e => e.isUnlocked))
+                        return true;
+                }
+                return false;
+            }
+        }
+
         public static void Save(string storyJsonPath, StoryNodePlayer player)
         {
             var data = new AutoSaveData
