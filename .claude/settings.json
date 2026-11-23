@@ -1,0 +1,20 @@
+{
+  "enabledPlugins": {
+    "jin-company@jin-local": true,
+    "agent-skills@addy-agent-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "jin-local": {
+      "source": {
+        "source": "directory",
+        "path": "./jin-marketplace"
+      }
+    },
+    "addy-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "addyosmani/agent-skills"
+      }
+    }
+  }
+}

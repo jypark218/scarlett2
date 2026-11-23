@@ -1,0 +1,8 @@
+{
+  "name": "jin-local",
+  "owner": { "name": "Park Jiyeon" },
+  "plugins": [
+    { "name": "jin-company", "source": "./jin-company", "version": "0.1.0",
+      "description": "총괄 비서와 4개 팀(게임 개발, UI 포트폴리오·취업, 데라디 비주얼 TF, 개인 브랜딩)" }
+  ]
+}

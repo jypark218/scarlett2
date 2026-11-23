@@ -1,0 +1,15 @@
+{
+  "name": "jin-company",
+  "version": "0.1.0",
+  "description": "지연의 AI 사무실: 총괄 비서와 4개 팀(게임 개발, UI 포트폴리오·취업, 데라디 비주얼 TF, 개인 브랜딩)의 역할·규칙·업무 흐름.",
+  "author": {
+    "name": "Park Jiyeon"
+  },
+  "keywords": [
+    "team",
+    "game-dev",
+    "portfolio",
+    "branding",
+    "visual-direction"
+  ]
+}
